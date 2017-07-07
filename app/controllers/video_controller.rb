@@ -3,4 +3,8 @@ class VideoController < ApplicationController
   def create
     video = Video.create(videoId: params[:videoId])
   end
+
+  def update
+    puts params
+  end
 end
