@@ -1,4 +1,4 @@
-require "http"
+require "rest-client"
 require "json"
 
 class MainController < ApplicationController
@@ -13,10 +13,14 @@ class MainController < ApplicationController
     elsif params[:image].content_type == "image/jpg"
       file_name += '.jpg'
     end
-    puts file_name
+    puts (Dir.pwd + file_name)
     File.open(file_name, 'wb') do |file| 
       file.write(params[:image].read)
     end
+    RestClient.post("http://localhost:9098/processImage",
+    {
+      :path => (Dir.pwd + file_name)
+    })
     res = JSON.parse(HTTP.post("http://localhost:9098/processImage").body)
     res = res.map do |result|
       file_name = File.basename result[:name], '.*'

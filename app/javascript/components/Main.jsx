@@ -73,10 +73,13 @@ export default class Main extends React.Component {
             <Grid style={{ height: 300, marginTop: 20 }}>
                 <Row className="show-grid" style={{ height: '100%' }}>
                     <Col xs={6} md={6} style={{ height: '100%' }}>
-                    <Player startTime={this.state.resultList[playingVideoIndex].second}>
-                        <source src={`/public/${this.state.resultList[playingVideoIndex].name}`}/>
+                    {
+                    this.state.resultList && this.state.resultList.length > 0 &&
+                    <Player startTime={this.state.resultList[this.state.playingVideoIndex].second}>
+                        <source src={`/public/${this.state.resultList[this.state.playingVideoIndex].name}`}/>
                         <BigPlayButton position='center' />
                     </Player>
+                    }
                     </Col>
                     <Col xs={6} md={6} style={{ height: '100%' }}>
                         <div style={{ height: 60 }}>
