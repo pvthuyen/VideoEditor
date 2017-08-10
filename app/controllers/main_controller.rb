@@ -20,7 +20,7 @@ class MainController < ApplicationController
     RestClient.post("http://localhost:9098/processImage",
     {
       :path => (Dir.pwd + file_name)
-    })
+    }.to_json, {content_type: :json, accept: :json})
     res = JSON.parse(HTTP.post("http://localhost:9098/processImage").body)
     res = res.map do |result|
       file_name = File.basename result[:name], '.*'
