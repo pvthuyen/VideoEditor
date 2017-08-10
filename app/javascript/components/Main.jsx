@@ -6,6 +6,8 @@ import {
     Button,
     Modal
 } from 'react-bootstrap';
+import {Player, ControlBar, BigPlayButton} from 'video-react';
+import Dropzone from 'react-dropzone';
 
 import {
     createVideo,
@@ -19,32 +21,15 @@ export default class Main extends React.Component {
         this.state = {
             playingVideoIndex: 0,
             showModal: false,
-            uploaderUrl: null,
+            resultList: null,
         }
-        this.addVideo = this.addVideo.bind(this);
         this.onPlayVideo = this.onPlayVideo.bind(this);
         this.closeModal = this.closeModal.bind(this);
-    }
-
-    addVideo() {
-        this.setState({ showModal: true });
-        createVideo((videoId) => {
-            fetch('/video', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({videoId})
-            });
-            getUploader(videoId, (uploader_url) => {
-                console.log(uploader_url);
-                this.setState({ uploaderUrl: uploader_url });
-            });
-        });
+        this.onDrop = this.onDrop.bind(this);
     }
 
     closeModal() {
-        this.setState({ showModal: false, uploaderUrl: null });
+        this.setState({ showModal: false});
     }
 
     onPlayVideo(index) {
@@ -64,17 +49,34 @@ export default class Main extends React.Component {
         });
     }
 
+    onDrop(acceptedFiles, rejectedFiles) {
+        if (acceptedFiles.length > 0) {
+            let form = new FormData();
+            form.append('image', acceptedFiles[0]);
+            fetch('/upload_file', {
+                method: 'POST',
+                headers: {
+                },
+                body: form
+            })
+                .then(res => res.text())
+                .then(resultList => {
+                    this.setState({ showModal: false, resultList });
+                });
+        }
+    }
+
     render() {
         const {videos} = this.props;
+        console.log(videos);
         return (
             <Grid style={{ height: 300, marginTop: 20 }}>
                 <Row className="show-grid" style={{ height: '100%' }}>
                     <Col xs={6} md={6} style={{ height: '100%' }}>
-                        <iframe 
-                            style={{ width: '100%', height: '100%' }}
-                            allowFullScreen 
-                            src={videos[this.state.playingVideoIndex] && 
-                                videos[this.state.playingVideoIndex].embed_url} />
+                    <Player startTime={this.state.resultList[playingVideoIndex].second}>
+                        <source src={`/public/${this.state.resultList[playingVideoIndex].name}`}/>
+                        <BigPlayButton position='center' />
+                    </Player>
                     </Col>
                     <Col xs={6} md={6} style={{ height: '100%' }}>
                         <div style={{ height: 60 }}>
@@ -88,9 +90,9 @@ export default class Main extends React.Component {
                                 style={{ display: 'inline', right: 0, position: 'absolute' }}
                                 bsStyle="primary" 
                                 bsSize="large"
-                                onClick={this.addVideo}
+                                onClick={() => this.setState({ showModal: true })}
                             >
-                                Add video
+                                Search photo
                             </Button>
                         </div>
                         <Grid style={{ width: '100%' }}>
@@ -99,9 +101,16 @@ export default class Main extends React.Component {
                     </Col>
                 </Row>
                 <Modal show={this.state.showModal} onHide={this.closeModal}                    
-                    style={{ width: '80%' }}
+                    style={{ width: '80%', padding: 'auto' }}
                 >
-                    <iframe style={{ height: '100%', width: '100%' }} src={this.state.uploaderUrl } />
+                    <Dropzone accept="image/jpeg, image/png" 
+                        onDrop={this.onDrop} 
+                        style={{width: '100%', height: 100, padding: 'auto' }}>
+                        <div style={{width: '100%', fontSize: 22, 
+                        textAlign: 'center', height: '100%', lineHeight: 4}}>
+                            Drop images here!
+                        </div>
+                    </Dropzone>
                 </Modal>
             </Grid>
         );
