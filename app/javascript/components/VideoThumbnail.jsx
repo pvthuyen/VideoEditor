@@ -27,7 +27,7 @@ export default class VideoThumbnail extends React.Component {
                 onMouseLeave={this.toggleHoover}
             >
                 <img 
-                    src={this.props.video.thumbnail_url} 
+                    src={{uri: '/public/temp'}} 
                     style={this.state.hoover ? styles.imageHoover : styles.image} 
                 />
                 <div 

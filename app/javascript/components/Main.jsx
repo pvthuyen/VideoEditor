@@ -21,7 +21,7 @@ export default class Main extends React.Component {
         this.state = {
             playingVideoIndex: 0,
             showModal: false,
-            resultList: null,
+            resultList: [],
         }
         this.onPlayVideo = this.onPlayVideo.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -37,12 +37,11 @@ export default class Main extends React.Component {
     }
 
     renderThumbnails() {
-        return this.props.videos.map((video, index) => {
+        return this.state.resultList.map((video, index) => {
             return (
                 <VideoThumbanil
-                    video={video}
                     videoIndex={index}
-                    key={video.videoId}
+                    key={video.name + '_' + video.second}
                     onPlayVideo={this.onPlayVideo}
                 />
             );
@@ -59,7 +58,7 @@ export default class Main extends React.Component {
                 },
                 body: form
             })
-                .then(res => res.text())
+                .then(res => res.json())
                 .then(resultList => {
                     this.setState({ showModal: false, resultList });
                 });
@@ -67,8 +66,7 @@ export default class Main extends React.Component {
     }
 
     render() {
-        const {videos} = this.props;
-        console.log(videos);
+        console.log(this.state.resultList);
         return (
             <Grid style={{ height: 300, marginTop: 20 }}>
                 <Row className="show-grid" style={{ height: '100%' }}>
