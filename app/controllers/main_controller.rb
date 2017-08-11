@@ -17,7 +17,7 @@ class MainController < ApplicationController
     File.open(file_name, 'wb') do |file| 
       file.write(params[:image].read)
     end
-    res = RestClient.post("http://localhost:9098/server/processImage",
+    res = RestClient.post("localhost:9098/server/processImage",
     {
       :path => ("#{Dir.pwd}/#{file_name}")
     }.to_json, {content_type: :json, accept: :json})

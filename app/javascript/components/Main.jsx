@@ -19,9 +19,9 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            playingVideoIndex: 0,
             showModal: false,
             resultList: [],
+            playingVideoIndex: 0
         }
         this.onPlayVideo = this.onPlayVideo.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -33,7 +33,9 @@ export default class Main extends React.Component {
     }
 
     onPlayVideo(index) {
-        this.setState({playingVideoIndex: index});
+        this.setState({ playingVideoIndex: index });
+        this.videoPlayer.load(`/${this.state.resultList[index].name}.mp4`);
+        this.videoPlayer.seek(this.state.resultList[index].second);
     }
 
     renderThumbnails() {
@@ -67,14 +69,17 @@ export default class Main extends React.Component {
 
     render() {
         console.log(this.state.resultList);
+        console.log(this.state.resultList[this.state.playingVideoIndex]);
         return (
             <Grid style={{ height: 300, marginTop: 20 }}>
                 <Row className="show-grid" style={{ height: '100%' }}>
                     <Col xs={6} md={6} style={{ height: '100%' }}>
                     {
                     this.state.resultList && this.state.resultList.length > 0 &&
-                    <Player startTime={this.state.resultList[this.state.playingVideoIndex].second}>
-                        <source src={`/public/${this.state.resultList[this.state.playingVideoIndex].name}`}/>
+                    <Player 
+                        ref={(ref) => this.videoPlayer = ref}
+                        startTime={this.state.resultList[this.state.playingVideoIndex].second}>
+                        <source src={`/${this.state.resultList[this.state.playingVideoIndex].name}.mp4`}/>
                         <BigPlayButton position='center' />
                     </Player>
                     }
