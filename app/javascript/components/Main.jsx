@@ -42,6 +42,7 @@ export default class Main extends React.Component {
         return this.state.resultList.map((video, index) => {
             return (
                 <VideoThumbanil
+                    thumbnailName={`/images/${video.name}_${("000" + video.second).slice(-4)}.jpg`}
                     videoIndex={index}
                     key={video.name + '_' + video.second}
                     onPlayVideo={this.onPlayVideo}
