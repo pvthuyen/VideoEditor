@@ -23,10 +23,10 @@ export default class VideoThumbnail extends React.Component {
                 xs={8}
                 md={4}
                 style={styles.container} 
-                onMouseEnter={this.toggleHoover}
-                onMouseLeave={this.toggleHoover}
             >
                 <img 
+                    onMouseEnter={this.toggleHoover}
+                    onMouseLeave={this.toggleHoover}
                     src={this.props.thumbnailName} 
                     style={this.state.hoover ? styles.imageHoover : styles.image} 
                 />
@@ -44,6 +44,7 @@ export default class VideoThumbnail extends React.Component {
 const styles = {
     container: {
         position: 'relative',
+        padding: 10,
     },
     image: {
         opacity: 1,
